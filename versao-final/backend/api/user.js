@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt-nodejs')
 
+/** Este app é o app passado pelo consign() para todas as dependências
+ * declaradas no then()
+ */
 module.exports = app => {
     const { existsOrError, notExistsOrError, equalsOrError } = app.api.validation
 
@@ -8,6 +11,11 @@ module.exports = app => {
         return bcrypt.hashSync(password, salt)
     }
 
+    /** Método Save - é um método Middleware que poderia ter o parâmetro next
+     * porém não faz sentido neste momento.
+     * Como está dentro de um module.exports (global) na parte final
+     * vamos fazer um return { save } que conterá todas as funções aqui criadas.
+     */
     const save = async (req, res) => {
         const user = { ...req.body }
         if(req.params.id) user.id = req.params.id
@@ -85,5 +93,10 @@ module.exports = app => {
         }
     }
 
+    /** Exportando todas as constantes que contém uma função anônima
+     *  que poderão ser acessadas pelo app. Ex: app.api.user.save(...)
+     *  app.api(nome da pasta).user(nome arquivo).save(nome metodo)
+     *  Veja no arquivo config\routes.js
+     */
     return { save, get, getById, remove }
 }

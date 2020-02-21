@@ -1,0 +1,15 @@
+Alteramos o arquivo .env para o arquivo config/config.env
+
+NODE_ENV=development
+
+# MYSQL
+APP_DB_HOST=localhost
+APP_DB_PORT=3306
+APP_DB_NAME=knowledge_db
+APP_DB_USER=admin_knowledge
+APP_DB_PASSWORD=knowledge
+
+APP_AUTH_SECRET=ADADFDAKFJASDFJADSJFA
+
+# MONGODB 
+MONGO_URI=mongodb://admin_knowledge:knowledge@127.0.0.1:27017/knowledge_mongo_db
