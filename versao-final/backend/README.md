@@ -83,6 +83,19 @@ Já ajustei o package.json:
   },
 ```
 
+Não esqueça de importá-los no index.js:
+```javascript
+const colors = require('colors')
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config/config.env" });
+```
+
+E o acesso as variáveis do config/config.env se darão fazendo:
+
+```javascript
+process.env.CONSTANTE
+```
+
 
 # 3. KNEX GLOBAL OU LOCAL
 
@@ -323,7 +336,7 @@ Isto será testado quando formos rodar as migrations para criar as tabelas do BD
 npx knex migrate:latest
 ```
 
-# ENTENDENDO COMO FUNCIONA O CONSIGN
+# 13. ENTENDENDO COMO FUNCIONA O CONSIGN
 
 Vamos criar uma pasta chamada **api** e dentro vamos criar todos os códigos da nossa api.
 Para entendermos melhor, criamos o arquivo **api\user.js** e o arquivo **config\routes.js**.
@@ -345,7 +358,7 @@ consign()
     .into(app)
 ```
 
-# BANCO DE DADOS - KNEX - BD RELACIONAL - MIGRATIONS
+# 14. BANCO DE DADOS - KNEX - BD RELACIONAL - MIGRATIONS
 
 Já criamos o BD MySQL chamado:
 
@@ -399,7 +412,7 @@ app.db = db
 
 Com a variável **db** que nós vamos fazer os comandos SELECT... 
 
-# MIGRATION
+# 15. MIGRATION
 
 
 ```
@@ -426,7 +439,7 @@ exports.down = function (knex, Promise) {
 Antes de prosseguirmos criando os arquivos vamos criar um VALIDADOR.
 
 
-# RUM MIGRATIONS - Aula 347
+# 16. RUM MIGRATIONS - Aula 347
 
 Problemas, tive que definir o tamanho do e-mail para 200 caracteres devido ao erro:
 
@@ -464,4 +477,319 @@ C:\wamp64\www\_2020\knowledge\versao-final\backend\migrations\20180927160211_cre
 C:\wamp64\www\_2020\knowledge\versao-final\backend\migrations\20180927160306_create_table_categories.js
 C:\wamp64\www\_2020\knowledge\versao-final\backend\migrations\20180927160322_create_table_articles.js
 C:\wamp64\www\_2020\knowledge\versao-final\backend\migrations\20181001102706_add_deleted_at_table_users.js
+```
+
+# 17. DEPOIS DAS MIGRATIONS - VAMOS CONSTRUIR OS SEEDERS
+
+Vamos criar a pasta **dados_seed** e lá iremos colocar os
+arquivos de JSON com os dados que serão inseridos.
+
+
+## 17.1. SEEDS USERS
+
+Antes de iniciarmos precisaremos criptografar as senhas dos usuários. Para isto vamos instalar o pacote: bcrypt-nodejs.
+
+```
+npm i -S bcrypt-nodejs
+```
+
+Vamos criar o arquivo de SEED chamado addUsers.js na pasta seed com o comando:
+
+```
+npx knex seed:make addUsers --env development
+```
+
+O arquivo inicial:
+
+```javascript
+exports.seed = function(knex, Promise) {
+  // Deletes ALL existing entries
+  return knex('table_name').del()
+    .then(function () {
+      // Inserts seed entries
+      return knex('table_name').insert([
+        {id: 1, colName: 'rowValue1'},
+        {id: 2, colName: 'rowValue2'},
+        {id: 3, colName: 'rowValue3'}
+      ]);
+    });
+};
+```
+
+O arquivo backend\seeds\addUsers.js final:
+
+
+```javascript
+const usersData = require('../dados_seed/users');
+
+exports.seed = function(knex) {
+  // Deletes ALL existing entries
+  return knex('users')
+    .del()
+    .then(function() {
+      // Inserts seed entries
+      return knex('users').insert(usersData);
+    });
+};
+```
+
+Acerte o arquivo de Dados a serem inseridos conforme a tabela **users**:
+
+Descrição da tabela users:
+Field | Type | Null | key | Default | Extra
+```js
+id	int(10) unsigned	NO	PRI		auto_increment
+name	varchar(255)	NO	""		""
+email	varchar(200)	NO	UNI		""
+password	varchar(255)	NO	""		""
+admin	tinyint(1)	NO	""	0	""
+deletedAt	timestamp	YES	""		""
+```
+
+Nesta tabela o e-mail deve ser único.
+
+backend\dados_seed\users.js
+
+```javascript
+const bcrypt = require('bcrypt-nodejs');
+
+const getHash = pass => {
+  // Se usasse bcrypt.genSalt espera uma callback
+  const salt = bcrypt.genSaltSync();
+  const senhaFinal = bcrypt.hashSync(pass, salt);
+  console.log(senhaFinal);
+  return senhaFinal;
+};
+
+module.exports = [
+  {
+    name: 'Marcelo Facio Palin',
+    email: 'palin@mail.com',
+    password: getHash('senha123'),
+    admin: true,
+  },
+  {
+    name: 'User Comum',
+    email: 'user@mail.com',
+    password: getHash('senha123'),
+    admin: false,
+  },
+];
+```
+
+## 17.2. RODANDO O SEED DE USERS
+
+* Somente depois de ter rodados as Migrations com: **npx knex migrate:latest**
+* Rode os seeds com: **npx knex seed:run**
+```
+npx knex seed:run
+```
+
+Se verificarmos a tabela users no BD teremos:
+
+1	Marcelo Facio Palin	palin@mail.com	$2a$10$JqnpzKhxy4QAr2B2Zp96Keu.DHEQttyugUBPF/8H5r5eClbIaFZ0.	1	
+2	User Comum	user@mail.com	$2a$10$nQ1L1Y8GYwdvLXQDPhr/BuITIqqzSrEorklPoL.PSvqxKgbl1EZrW	0	
+
+
+# 18. SEED PARA TABELA CATEGORIES
+
+Descrição da tabela:
+
+Field | Type | Null | key | Default | Extra
+
+```js
+id	int(10) unsigned	NO	PRI		auto_increment
+name	varchar(255)	NO	""		""
+parentId	int(11)	YES	MUL		""
+```
+
+O detalhe desta tabela é que o parentId pode ser NULO.
+
+Vamos criar o arquivo de SEED chamado **addCategories.js** na pasta seed com o comando:
+
+```
+npx knex seed:make addCategories --env development
+```
+
+O arquivo inicial backend\seeds\addCategories.js:
+
+```javascript
+exports.seed = function(knex, Promise) {
+  // Deletes ALL existing entries
+  return knex('table_name').del()
+    .then(function () {
+      // Inserts seed entries
+      return knex('table_name').insert([
+        {id: 1, colName: 'rowValue1'},
+        {id: 2, colName: 'rowValue2'},
+        {id: 3, colName: 'rowValue3'}
+      ]);
+    });
+};
+```
+
+O arquivo backend\seeds\addCategories.js final:
+
+
+```javascript
+const usersData = require('../dados_seed/users');
+
+exports.seed = function(knex) {
+  // Deletes ALL existing entries
+  return knex('users')
+    .del()
+    .then(function() {
+      // Inserts seed entries
+      return knex('users').insert(usersData);
+    });
+};
+```
+
+## 18.1. RODANDO O SEED
+
+* Somente depois de ter rodados as Migrations com: **npx knex migrate:latest**
+
+Irá rodar todas os SEEDs novamente. Não há problema pois antes de executar o seed deletamos os dados da tabela para conseguirmos rodar novamente.
+
+```
+npx knex seed:run
+```
+id | name | parentId
+1	Frontend	 null
+2	 VueJS	    1
+3	Javascript	1
+
+
+# 19. SEED PARA TABELA ARTICLES
+
+Descrição da tabela:
+
+Field | Type | Null | key | Default | Extra
+
+```js
+id	int(10) unsigned	NO	PRI		auto_increment
+name	varchar(255)	NO	""		""
+description	varchar(1000)	NO	""		""
+imageUrl	varchar(1000)	YES	""		""
+content	blob	NO	""		""
+userId	int(11)	NO	MUL		""
+categoryId	int(11)	NO	MUL		""
+```
+
+O detalhe desta tabela é que o parentId pode ser NULO.
+
+Vamos criar o arquivo de SEED chamado **addArticles.js** na pasta seed com o comando:
+
+```
+npx knex seed:make addArticles --env development
+```
+
+O arquivo inicial backend\seeds\addArticles.js:
+
+```javascript
+exports.seed = function(knex, Promise) {
+  // Deletes ALL existing entries
+  return knex('table_name').del()
+    .then(function () {
+      // Inserts seed entries
+      return knex('table_name').insert([
+        {id: 1, colName: 'rowValue1'},
+        {id: 2, colName: 'rowValue2'},
+        {id: 3, colName: 'rowValue3'}
+      ]);
+    });
+};
+```
+
+O arquivo backend\seeds\addArticles.js final:
+
+
+```javascript
+const dados = require('../dados_seed/articles');
+
+exports.seed = function(knex) {
+  // Deletes ALL existing entries
+  return knex('articles')
+    .del()
+    .then(function() {
+      // Inserts seed entries
+      return knex('articles').insert(dados);
+    });
+};
+```
+
+## 19.1. DADOS DA TABELA ARTICLES
+
+```javascript
+module.exports = [
+  {
+    name: 'Introdução ao VueJS',
+    description: 'Você aprenderá o VueJS do início ao fim',
+    content: 'Conteúdo do Curso',
+    userId: 2,
+    categoryId: 2,
+  },
+  {
+    name: 'Introdução aos Componentes VueJS',
+    description: 'Você aprenderá sobre os Componentes do VueJS do início ao fim',
+    content: 'Conteúdo do Curso de Componentes de Vue',
+    userId: 3,
+    categoryId: 2,
+  },
+  {
+    name: 'Introdução ao Javascript',
+    description: 'Você aprenderá o Javascript do início ao fim',
+    content: 'Conteúdo do Curso de Javascript',
+    userId: 3,
+    categoryId: 3,
+  },
+
+];
+```
+
+
+## 19.2. RODANDO O SEED PARA USERS, CATEGORIES E ARTICLES
+
+* Somente depois de ter rodados as Migrations com: **npx knex migrate:latest**
+
+Irá rodar todas os SEEDs novamente. Não há problema pois antes de executar o seed deletamos os dados da tabela para conseguirmos rodar novamente.
+
+```
+npx knex seed:run
+```
+
+# EXECUTANDO O BACKEND
+
+O comando **start** executa o nodemon conforme configurado em **package.json**
+
+```json
+  "scripts": {
+    "start": "nodemon --inspect --ext js,graphql",
+    "production": "pm2 start index.js --name knowledge-backend"
+  },
+```
+
+* A opção **--ext** especifica quais extensões de arquivos o nodemon deve monitorar.
+* A opção **--inspect** permite depurarmos a API com o nodemon e VSCode
+
+Como é feita a depuração, marque a linha que está dentro da rota que deseja investigar e chame a rota no browser ou pelo Postman e verá que a requisição ficará parada no VSCode aguardando você.
+
+
+Atenção:
+Como introduzimos o uso do dotenv com as cofigurações no arquivo **config/config.env** temos que alterar os arquivos auth.js e passport.js
+para que troquem **authSecret** por **process.env.APP_AUTH_SECRET**
+
+```javascript
+// const { authSecret } = require('../.env')
+const dotenv = require("dotenv");
+const jwt = require('jwt-simple')
+const bcrypt = require('bcrypt-nodejs')
+dotenv.config({ path: "./config/config.env" })
+// substitua authSecret por process.env.APP_AUTH_SECRET
+```
+
+
+
+```
+npm start
 ```

@@ -3,6 +3,7 @@ const app = require('express')()
 const consign = require('consign')
 const db = require('./config/db')
 const mongoose = require('mongoose')
+const colors = require('colors')
 
 dotenv.config({ path: "./config/config.env" });
 const connectDBMongo = require('./config/mongodb');
