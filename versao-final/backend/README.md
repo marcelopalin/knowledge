@@ -788,8 +788,6 @@ dotenv.config({ path: "./config/config.env" })
 // substitua authSecret por process.env.APP_AUTH_SECRET
 ```
 
-
-
 ```
 npm start
 ```

@@ -1,5 +1,6 @@
-const dotenv = require("dotenv");
-dotenv.config({ path: "./config/config.env" });
+const dotenv = require('dotenv');
+
+dotenv.config({ path: './config/config.env' });
 
 module.exports = {
   client: 'mysql',

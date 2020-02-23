@@ -85,7 +85,7 @@ CREATE DATABASE knowledge_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 ```
 npx knex migrate:latest
-npx knex seed:run
+npx knex seed:run --specific=seed/addUsers.js
 ```
 
 
