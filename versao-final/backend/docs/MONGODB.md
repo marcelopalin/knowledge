@@ -194,12 +194,12 @@ use admin
 > use knowledge_mongo_db
 switched to db knowledge_mongo_db
 > db.createUser(
-...    {
-...      user: "admin_knowledge",
-...      pwd:  "knowledge", //passwordPrompt(), 
-...      roles: [ { role: "readWrite", db: "knowledge_mongo_db" }]
-...    }
-...  )
+    {
+      user: "admin_knowledge",
+      pwd:  "knowledge", //passwordPrompt(), 
+      roles: [ { role: "readWrite", db: "knowledge_mongo_db" }]
+    }
+  )
 Successfully added user: {
 	"user" : "admin_knowledge",
 	"roles" : [

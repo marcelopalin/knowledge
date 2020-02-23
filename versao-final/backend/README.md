@@ -9,6 +9,10 @@ Tabelas:
 - Categories
 - Articles
 
+OBS: ao mudarmos o KNEX com MYSQL - é preciso rever o retorno das consultas, pois é diferente do retorno do POSTGRES. Provavelmente não irão funcionar as consultas das estatísticas nem a consulta aninhada.
+
+Utilize o código da pasta **testando** para conseguir visualizar o que precisa.
+
 
 A aplicação é formada pelo **backend** e **frontend**. O **backend** precisa do **NODEJS** para executar, porém, o **frontend** será apenas **construído** usando o **NODEJS** gerando arquivos estáticos que serão disponibilizados pelo servidor **NGNIX** - também podemos configurar o S3 da Amazon para servir os arquivos do FRONTEND!.
 Mesmo que a a aplicação rode na MESMA MÁQUINA nós só iremos acessar a API se habilitarmos o CORS!! (que está nas nossas dependências).

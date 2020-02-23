@@ -1,24 +1,37 @@
+schedule\statsSchedule.js
+
+https://www.npmjs.com/package/node-schedule
+
+*    *    *    *    *    *
+┬    ┬    ┬    ┬    ┬    ┬
+│    │    │    │    │    │
+│    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+│    │    │    │    └───── month (1 - 12)
+│    │    │    └────────── day of month (1 - 31)
+│    │    └─────────────── hour (0 - 23)
+│    └──────────────────── minute (0 - 59)
+└───────────────────────── second (0 - 59, OPTIONAL)
+
+schedule.scheduleJob('*/30 * * * * *', async function() (30 em 30 segundos!)
+
+```js
 const schedule = require('node-schedule');
 
 module.exports = app => {
   schedule.scheduleJob('*/30 * * * * *', async function() {
-    console.log(`Rodando as estatísticas!`.red);
-
     const usersCount = await app
       .db('users')
-      .count('id as count')
+      .count('id')
       .first();
-    console.log(`Numero de Users ${usersCount.count}`.red);
     const categoriesCount = await app
       .db('categories')
-      .count('id as count')
+      .count('id')
       .first();
-    console.log(`Numero de Categorias ${categoriesCount.count}`.red);
     const articlesCount = await app
       .db('articles')
-      .count('id as count')
+      .count('id')
       .first();
-    console.log(`Numero de Artigos ${articlesCount.count}`.red);
+
     const { Stat } = app.api.stat;
 
     const lastStat = await Stat.findOne(
@@ -47,3 +60,5 @@ module.exports = app => {
     }
   });
 };
+
+```

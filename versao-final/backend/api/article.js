@@ -58,7 +58,7 @@ module.exports = app => {
 
     const result = await app
       .db('articles')
-      .count('id')
+      .count('id as count')
       .first();
     const count = parseInt(result.count);
 

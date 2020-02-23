@@ -6,14 +6,10 @@ const colors = require('colors');
 const db = require('./config/db');
 
 dotenv.config({ path: './config/config.env' });
-const connectDBMongo = require('./config/mongodb');
-// require('./config/mongodb')
-
-/** BD knowledge_mongo_db */
-connectDBMongo();
+const db2 = require('./config/db2');
 
 app.db = db;
-app.mongoose = mongoose;
+app.mongoose = db2;
 
 /** Obs:
  * A ordem da carga é importante, precisamos carregar as rotas depois
