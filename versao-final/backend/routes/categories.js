@@ -13,6 +13,12 @@ module.exports = app => {
     .all(app.config.passport.authenticate())
     .get(app.api.category.getTree);
 
+  /** Remover uma categoria é necessário excluir
+   *  Categorias tem Subcategorias ou 
+   *  Categoria tem Artigos
+   *  Só depois de desassociar a Categoria poderá 
+   *  ser removida
+   */
   app
     .route('/categories/:id')
     .all(app.config.passport.authenticate())

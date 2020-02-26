@@ -1,6 +1,6 @@
 # NO MÉTODO LOGIN
 
-Na aba Tests da requisição POST - login/signin ou registe coloque o seguinte comando:
+Na aba **Tests** da requisição POST - login/signin ou register coloque o seguinte comando:
 
 ```js
 pm.environment.set("TOKEN", pm.response.json().token)

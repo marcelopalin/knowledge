@@ -39,6 +39,9 @@ module.exports = app => {
         'Código da Categoria não informado.',
       );
 
+      /** Categoria tem alguma subcategoria?
+       *  Se tiver não deixa excluir e lança um erro.
+       */
       const subcategory = await app
         .db('categories')
         .where({ parentId: req.params.id });
@@ -47,11 +50,18 @@ module.exports = app => {
         'Categoria possui subcategorias.',
       );
 
+      /** Possui artigos relacionados? 
+       *  Se tiver mandará um erro e não deixará remover.
+       */
       const articles = await app
         .db('articles')
         .where({ categoryId: req.params.id });
       notExistsOrError(articles, 'Categoria possui artigos.');
 
+      /** Finalmente executa o delete.. se não 
+       *  tiver nada, é que a categoria não foi encontrada
+       *  e não poderá deletar
+       */
       const rowsDeleted = await app
         .db('categories')
         .where({ id: req.params.id })
@@ -64,6 +74,9 @@ module.exports = app => {
     }
   };
 
+  /** Monta um atributo a mais chamado Path
+   *  Será chamado nas funções abaixo
+   */
   const withPath = categories => {
     const getParent = (categories, parentId) => {
       const parent = categories.filter(
@@ -93,6 +106,7 @@ module.exports = app => {
     return categoriesWithPath;
   };
 
+  /** Método Get que usa a função withPath */
   const get = (req, res) => {
     app
       .db('categories')
@@ -100,6 +114,7 @@ module.exports = app => {
       .catch(err => res.status(500).send(err));
   };
 
+  /** rota: categories/id - pega o parâmetro da url */
   const getById = (req, res) => {
     app
       .db('categories')

@@ -1,8 +1,13 @@
 const schedule = require('node-schedule');
 
 module.exports = app => {
-  schedule.scheduleJob('*/30 * * * * *', async function() {
-    console.log(`Rodando as estatísticas!`.red);
+  schedule.scheduleJob('*/5 * * * *', async function() {
+    const today = new Date();
+    const todayFmt = `${today.getFullYear()}-${today.getMonth() +
+      1}-${today.getDate()}`;
+    const now = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+
+    console.log(`Rodando as estatísticas: ${now} ${todayFmt}`.red);
 
     const usersCount = await app
       .db('users')
