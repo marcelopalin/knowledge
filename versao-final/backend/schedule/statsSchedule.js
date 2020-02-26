@@ -1,7 +1,7 @@
 const schedule = require('node-schedule');
 
 module.exports = app => {
-  schedule.scheduleJob('*/5 * * * *', async function() {
+  schedule.scheduleJob('*/10 * * * *', async function() {
     const today = new Date();
     const todayFmt = `${today.getFullYear()}-${today.getMonth() +
       1}-${today.getDate()}`;

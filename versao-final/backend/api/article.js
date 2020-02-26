@@ -83,9 +83,25 @@ module.exports = app => {
       .catch(err => res.status(500).send(err));
   };
 
+  /** Consulta mais elaborada: utiliza a consulta RAW
+   *  que está escrita em api\queries.js.
+   *  Objetivo: Dado o ID da Categoria
+   */
   const getByCategory = async (req, res) => {
+
+    /** ID da categoria (clicado) que vamos usar na consulta RAW 
+     * mais abaixo
+    */
     const categoryId = req.params.id;
+    /** Para paginação esperamos receber a página que está, senão consideramos
+     * a página 1
+     */
     const page = req.query.page || 1;
+
+    /** CONSULTA TOP: WITH RECURSIVE
+     *  Passamos a consulta e também o Parâmetro com o ID
+     *  da Ca
+     */
     const categories = await app.db.raw(
       queries.categoryWithChildren,
       categoryId,

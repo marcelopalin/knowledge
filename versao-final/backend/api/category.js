@@ -1,7 +1,16 @@
 module.exports = app => {
+
+  /** Funções de validação utilizadas */
   const { existsOrError, notExistsOrError } = app.api.validation;
 
+  /**
+   *  Método Save Article - OK
+   * @param {*} req 
+   * @param {*} res 
+   */
   const save = (req, res) => {
+
+    /** Leitura dos parâmetro do Body */
     const category = {
       id: req.body.id,
       name: req.body.name,
