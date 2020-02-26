@@ -88,10 +88,9 @@ module.exports = app => {
    *  Objetivo: Dado o ID da Categoria
    */
   const getByCategory = async (req, res) => {
-
-    /** ID da categoria (clicado) que vamos usar na consulta RAW 
+    /** ID da categoria (clicado) que vamos usar na consulta RAW
      * mais abaixo
-    */
+     */
     const categoryId = req.params.id;
     /** Para paginação esperamos receber a página que está, senão consideramos
      * a página 1
@@ -106,6 +105,9 @@ module.exports = app => {
       queries.categoryWithChildren,
       categoryId,
     );
+
+    console.log(JSON.stringify(categories));
+
     const ids = categories.rows.map(c => c.id);
 
     app

@@ -11,6 +11,7 @@ exports.up = function(knex, Promise) {
       .boolean('admin')
       .notNull()
       .defaultTo(false);
+    table.timestamp('deletedAt');
   });
 };
 

@@ -4,6 +4,7 @@ exports.up = function(knex, Promise) {
     table.string('name').notNull();
     table
       .integer('parentId')
+      .unsigned()
       .references('id')
       .inTable('categories');
   });

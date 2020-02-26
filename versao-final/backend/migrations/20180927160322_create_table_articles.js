@@ -7,11 +7,13 @@ exports.up = function(knex, Promise) {
     table.binary('content').notNull();
     table
       .integer('userId')
+      .unsigned()
       .references('id')
       .inTable('users')
       .notNull();
     table
       .integer('categoryId')
+      .unsigned()
       .references('id')
       .inTable('categories')
       .notNull();
