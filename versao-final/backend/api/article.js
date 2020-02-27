@@ -108,7 +108,7 @@ module.exports = app => {
 
     console.log(JSON.stringify(categories));
 
-    const ids = categories.rows.map(c => c.id);
+    const ids = categories[0].map(c => c.id);
 
     app
       .db({ a: 'articles', u: 'users' })
