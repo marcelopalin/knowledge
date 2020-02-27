@@ -1,6 +1,6 @@
 <template>
     <footer class="footer">
-        <span>Copyright <strong>Cod3r</strong> © 2015-2018</span>
+        <span>Copyright <strong>Ampere Consultoria</strong> © 2019-2020</span>
     </footer>
 </template>
 
