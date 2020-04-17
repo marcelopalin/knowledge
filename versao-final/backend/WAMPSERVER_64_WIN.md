@@ -12,9 +12,9 @@ Teremos que desativar
 
 - Para definir a senha utilize:
 
-mysql> SET PASSWORD for 'root'@'localhost' = password('enteryourpassword');
-mysql> SET PASSWORD for 'root'@'127.0.0.1' = password('enteryourpassword');
-mysql> SET PASSWORD for 'root'@'::1' = password('enteryourpassword');
+SET PASSWORD for 'root'@'localhost' = 'enteryourpassword';
+CREATE USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'enteryourpassword';
+
 
 Na versão atual do WampServer wampserver3.2.0_x64.exe (27 fev 2020)
 temos o MariaDB e o MySQL (que solicitamos para instalar no momento da instalação do Wampserver)
@@ -165,4 +165,5 @@ Execute os comandos:
 UPDATE mysql.user SET Password=PASSWORD('enteryourpassword') WHERE User='root';
 FLUSH PRIVILEGES;
 
-mysql> SET PASSWORD FOR 'root'@'localhost' = 'enteryourpassword';
+SET PASSWORD for 'root'@'localhost' = 'enteryourpassword';
+CREATE USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'enteryourpassword';

@@ -5,7 +5,7 @@ module.exports = app => {
    * Altere o número de minutos que é para o Scheduler
    * atualizar os dados do MongoDB.
    */
-  schedule.scheduleJob('*/20 * * * *', async function() {
+  schedule.scheduleJob('*/1 * * * *', async function() {
     const today = new Date();
     const todayFmt = `${today.getFullYear()}-${today.getMonth() +
       1}-${today.getDate()}`;
